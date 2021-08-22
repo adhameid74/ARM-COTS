@@ -12,7 +12,7 @@
 #include "STD_TYPES.h"
 #include "BIT_MATH.h"
 #include "ERROR.h"
-//asdasdas
+
 #include "GPIO_interface.h"
 #include "GPIO_private.h"
 #include "GPIO_config.h"
@@ -78,31 +78,31 @@ ERROR_STATE_t GPIO_u8SetPinValue(u8 Copy_u8Port, u8 Copy_u8Pin, u8 Copy_u8Value)
 		case GPIO_PORTA:
 			if (Copy_u8Value == GPIO_HIGH)
 			{
-				SET_BIT(GPIOA->ODR, Copy_u8Pin);
+				GPIOA->BSRR = (1 << Copy_u8Pin);
 			}
 			else
 			{
-				CLR_BIT(GPIOA->ODR, Copy_u8Pin);
+				GPIOA->BRR = (1 << Copy_u8Pin);
 			}
 			break;
 		case GPIO_PORTB:
 			if (Copy_u8Value == GPIO_HIGH)
 			{
-				SET_BIT(GPIOB->ODR, Copy_u8Pin);
+				GPIOB->BSRR = (1 << Copy_u8Pin);
 			}
 			else
 			{
-				CLR_BIT(GPIOB->ODR, Copy_u8Pin);
+				GPIOB->BRR = (1 << Copy_u8Pin);
 			}
 			break;
 		case GPIO_PORTC:
 			if (Copy_u8Value == GPIO_HIGH)
 			{
-				SET_BIT(GPIOC->ODR, Copy_u8Pin);
+				GPIOC->BSRR = (1 << Copy_u8Pin);
 			}
 			else
 			{
-				CLR_BIT(GPIOC->ODR, Copy_u8Pin);
+				GPIOC->BRR = (1 << Copy_u8Pin);
 			}
 			break;
 	}
@@ -130,6 +130,28 @@ ERROR_STATE_t GPIO_u8GetPinValue(u8 Copy_u8Port, u8 Copy_u8Pin, u8* Copy_pu8Valu
 			break;
 		case GPIO_PORTC:
 			*Copy_pu8Value = GET_BIT(GPIOC->IDR, Copy_u8Pin);
+			break;
+	}
+	return NO_ERROR;
+}
+
+ERROR_STATE_t GPIO_u8SetPortValue(u8 Copy_u8Port, u16 Copy_u16Value)
+{
+	if ( Copy_u8Port > GPIO_PORTC )
+	{
+		return PARAMETER_ERROR;
+	}
+
+	switch(Copy_u8Port)
+	{
+		case GPIO_PORTA:
+			GPIOA->ODR = Copy_u16Value;
+			break;
+		case GPIO_PORTB:
+			GPIOB->ODR = Copy_u16Value;
+			break;
+		case GPIO_PORTC:
+			GPIOC->ODR = Copy_u16Value;
 			break;
 	}
 	return NO_ERROR;
